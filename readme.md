@@ -18,7 +18,7 @@
 - [Reset Password — Réinitialiser le mot de passe](#5-reset-password--réinitialiser-le-mot-de-passe)
 - [Utiliser le token JWT](#utiliser-le-token-jwt)
 - [Gestion des erreurs](#gestion-des-erreurs)
-
+- [username route](#6-username_route)
 ---
 
 ## 1. Google OAuth — Se connecter avec Google
@@ -537,6 +537,17 @@ axios.interceptors.response.use(
 ```
 
 ---
+
+
+###6username_route 
+
+exemple : 
+fetch("http://localhost:5000/api/route", {
+  method: "GET",
+  headers: {
+    "Authorization": `Bearer ${token}`
+  }
+})
 
 ## Gestion des erreurs
 
