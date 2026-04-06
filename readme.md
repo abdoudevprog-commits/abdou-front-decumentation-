@@ -6,7 +6,9 @@ Ce README explique comment brancher le frontend sur toutes les fonctionnalites b
 
 Utilise une variable globale dans le frontend:
 
-
+```js
+const BACK_URL = "https://smail-app-production.up.railway.app";
+```
 
 ## Endpoints disponibles
 
@@ -108,6 +110,52 @@ const data = await api("/api/auth/login", {
 });
 localStorage.setItem("token", data.token);
 ```
+
+### Admin login (pour domaine admin)
+
+- `POST /api/auth/admin-login`
+- Si les identifiants sont bons et que l'utilisateur est admin: succes + token.
+- Si l'utilisateur n'est pas admin: erreur 403 avec message `Tu n'es pas admin.`
+
+```js
+try {
+  const data = await api("/api/auth/admin-login", {
+    method: "POST",
+    body: JSON.stringify({
+      email: "admin@example.com",
+      password: "adminPassword123",
+    }),
+  });
+
+  localStorage.setItem("token", data.token);
+  window.location.href = "/admin/dashboard";
+} catch (error) {
+  alert(error.message);
+}
+```
+
+Flow recommande:
+
+- Sur ton sous-domaine admin (ex: `admin.tondomaine.com`) affiche une page login admin.
+- Cette page appelle `POST /api/auth/admin-login`.
+- En succes: redirection vers dashboard admin.
+- En echec 403: affiche `Tu n'es pas admin.`
+
+### Protection du dashboard admin
+
+Le frontend peut cacher la page admin si aucun token n'existe, mais la vraie securite doit etre faite cote backend.
+
+Frontend:
+
+- verifier si un token existe avant d'ouvrir le dashboard admin
+- rediriger vers `/admin-login.html` si le token est absent
+- si la route admin renvoie `401` ou `403`, supprimer le token et revenir au login admin
+
+Backend:
+
+- verifier le JWT sur chaque route admin
+- verifier que `role === "admin"`
+- refuser l'acces avec `401` ou `403` si l'utilisateur n'est pas autorise
 
 ### Forgot password
 
@@ -278,6 +326,7 @@ export default function AdminClientsTable() {
 | GET | /api/auth/google/failure | Non | Echec OAuth Google |
 | POST | /api/auth/register | Non | Creation de compte |
 | POST | /api/auth/login | Non | Login email/password |
+| POST | /api/auth/admin-login | Non | Login reserve admin |
 | POST | /api/auth/forgot-password | Non | Demande reset mot de passe |
 | POST | /api/auth/reset-password | Non | Validation reset mot de passe |
 | GET | /api/auth/user/:id | Non | Username par id |
