@@ -194,13 +194,14 @@ console.log(user.username);
 
 ## 2) Username utilisateur (token requis)
 
-### Recuperer mon username
+### Recuperer mon profil (username + email)
 
 - `POST /api/username/me`
 
 ```js
 const data = await api("/api/username/me", { method: "POST" });
 console.log(data.username);
+console.log(data.email);
 ```
 
 ### Modifier mon username
@@ -213,6 +214,7 @@ const data = await api("/api/username/edit-username", {
   body: JSON.stringify({ newUsername: "nouveauPseudo" }),
 });
 console.log(data.username);
+console.log(data.email);
 ```
 
 ## 3) Changer mot de passe connecte (token requis)
@@ -330,8 +332,8 @@ export default function AdminClientsTable() {
 | POST | /api/auth/forgot-password | Non | Demande reset mot de passe |
 | POST | /api/auth/reset-password | Non | Validation reset mot de passe |
 | GET | /api/auth/user/:id | Non | Username par id |
-| POST | /api/username/me | Oui (JWT) | Username du user connecte |
-| PUT | /api/username/edit-username | Oui (JWT) | Modifier username |
+| POST | /api/username/me | Oui (JWT) | Username + email du user connecte |
+| PUT | /api/username/edit-username | Oui (JWT) | Modifier username (retourne username + email) |
 | PUT | /api/userpassword/change-password | Oui (JWT) | Changer mot de passe |
 | PUT | /api/password/change-password | Oui (JWT) | Alias de change-password |
 | PUT | /api/changestatusclient/:id/validate | Oui (Admin) | Valider ou invalider un client |
